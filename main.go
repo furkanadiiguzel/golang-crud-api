@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -22,8 +23,9 @@ type Director struct {
 
 var movies []Movie
 
-func getMovieById(w http.ResponseWriter, r http.Request) {
-
+func getMovies(w http.ResponseWriter, r http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(movies)
 }
 
 func main() {
@@ -33,12 +35,11 @@ func main() {
 	movies = append(movies, Movie{ID: "2", Isbn: "454555", Title: "Movie Two", Director: &Director{Firstname: "Stephen", Lastname: "Coach"}})
 	movies = append(movies, Movie{ID: "3", Isbn: "923424", Title: "Movie Three", Director: &Director{Firstname: "Furkan", Lastname: "Adıgüzel"}})
 
-	// Route Handlers / Endpoints
-	r.HandleFunc("/api/movies", getMovies).Methods("GET")
-	r.HandleFunc("/api/movies/{id}", getMovieById).Methods("GET")
-	r.HandleFunc("/api/movies", createMovie).Methods("POST")
-	r.HandleFunc("/api/movies/{id}", updateMovie).Methods("PUT")
-	r.HandleFunc("/api/movies/{id}", deleteMovie).Methods("DELETE")
+	r.HandleFunc("/movies", getMovies).Methods("GET")
+	r.HandleFunc("/movies/{id}", getMovieById).Methods("GET")
+	r.HandleFunc("/movies", createMovie).Methods("POST")
+	r.HandleFunc("/movies/{id}", updateMovie).Methods("PUT")
+	r.HandleFunc("/movies/{id}", deleteMovie).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8000", r))
 	log.Fatal(http.ListenAndServe(":8000", r))
