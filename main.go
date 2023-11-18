@@ -91,5 +91,5 @@ func main() {
 	r.HandleFunc("/movies/{id}", deleteMovie).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8000", r))
-	log.Fatal(http.ListenAndServe(":8000", r))
+
 }
